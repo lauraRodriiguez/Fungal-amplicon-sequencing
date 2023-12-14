@@ -62,10 +62,10 @@ library(gganimate)
 #install.packages('png')
 library('gifski')
 library('png')
-#install.packages("devtools")
-library(devtools)
 #install.packages("Hmisc")
 library(Hmisc)
+#install.packages("devtools")
+library(devtools)
 ```
 
 ## Color palette
@@ -670,30 +670,6 @@ core <- ggplot() +
 plot(core)
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
