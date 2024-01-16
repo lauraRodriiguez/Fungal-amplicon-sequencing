@@ -236,6 +236,8 @@ sort(data.frame(sample_sums(fungi.obj1))[,1], decreasing = TRUE)
 ## FILTER OUT SAMPLES BELOW 5000 reads
 fungi.obj1_5000reads <- prune_samples(sample_sums(fungi.obj1) > 5000, fungi.obj1) %>%
   phyloseq::filter_taxa(function(x) sum(x) > 0, TRUE) 
+
+fungi.obj1_5000reads
 ```
 
 # Reads obtained
@@ -415,26 +417,32 @@ indicator.treatment2 <- indicator.treatment %>%
   subset(p.value < 0.05) %>%
   mutate(OTU = rownames(.))
 
-indicator.treatment3 <- left_join(indicator.treatment2, tax, by = "OTU") 
-indicator.treatment3$category <- ifelse(indicator.treatment3$index == 1, "1", 
-                                        ifelse(indicator.treatment3$index == 2, "2",
-                                               ifelse(indicator.treatment3$index == 3, "3",
-                                                      ifelse(indicator.treatment3$index == 4, "4",
-                                                             ifelse(indicator.treatment3$index == 5, "5", NA)))))
+indicator.treatment3A <- left_join(indicator.treatment2, tax, by = "OTU") 
+indicator.treatment3A$category <- ifelse(indicator.treatment3A$index == 1, "1", 
+                                        ifelse(indicator.treatment3A$index == 2, "2",
+                                               ifelse(indicator.treatment3A$index == 3, "3",
+                                                      ifelse(indicator.treatment3A$index == 4, "4",
+                                                             ifelse(indicator.treatment3A$index == 5, "5", NA)))))
+```
 
 
-#this will tell use the specific count of OTUS at PHyla level and the treatments
-countPhylumSoilA <-indicator.treatment3 %>%
-  dplyr::group_by(Label, category) %>%
+```{r}
+#this will tell use the specific count of OTUS at Phyla level and the treatments
+countPhylumSoilA <-indicator.treatment3A %>%
+  dplyr::group_by(Phylum, category) %>%
   count()
 countPhylumSoilA
+```
 
+
+```{r}
+#plot
 #indicator.treatment4 <- indicator.treatment3 %>% 
 #count(OTU) 
 #indicator.treatment4$Phylum_other <- ifelse(indicator.treatment4$n < 10, "Other", indicator.treatment4$Phylum)  
 #indicator.treatment5 <- left_join(indicator.treatment3, indicator.treatment4, by = "OTU")
 
-indicatorA <-  ggplot(indicator.treatment3, aes(x = category, fill = Phylum)) +
+indicatorA <-  ggplot(indicator.treatment3A, aes(x = category, fill = Phylum)) +
   geom_bar(position = "stack") +
   scale_fill_manual(values = c(cbbPalette, "purple", "brown", "grey", "pink", "red", "blue", "darkgreen", "cyan", "gold", fungi.colors)) +
   theme_classic() +
@@ -465,7 +473,7 @@ tax$OTU <- rownames(data.frame(tax_labelSoilB@tax_table))
 
 indicator.treatment <- indicator.managementSoilB$sign
 indicator.treatment2 <- indicator.treatment %>%
-  subset(p.value < 0.01) %>%
+  subset(p.value < 0.05) %>%
   mutate(OTU = rownames(.))
 
 indicator.treatment3 <- left_join(indicator.treatment2, tax, by = "OTU") 
@@ -474,26 +482,32 @@ indicator.treatment3$category <- ifelse(indicator.treatment3$index == 1, "1",
                                                ifelse(indicator.treatment3$index == 3, "3",
                                                       ifelse(indicator.treatment3$index == 4, "4",
                                                              ifelse(indicator.treatment3$index == 5, "5", NA)))))
+```
 
 
+```{r}
 #this will tell use the specific count of OTUS at PHyla level and the treatments
 countPhylumSoilB <-indicator.treatment3 %>%
-  dplyr::group_by(Genus, category) %>%
+  dplyr::group_by(Phylum, category) %>%
   count()
 countPhylumSoilB
+```
+
+
+```{r}
 #indicator.treatment4 <- indicator.treatment3 %>% 
 #count(OTU) 
 #indicator.treatment4$Phylum_other <- ifelse(indicator.treatment4$n < 10, "Other", indicator.treatment4$Phylum)  
 
 #indicator.treatment5 <- left_join(indicator.treatment3, indicator.treatment4, by = "OTU")
 
-indicatorB <- ggplot(indicator.treatment3, aes(x = category, fill = Phylum)) +
+indicatorB <-  ggplot(indicator.treatment3, aes(x = category, fill = Phylum)) +
   geom_bar(position = "stack") +
-  scale_fill_manual(values = c(cbbPalette, "purple", "brown", "grey", "pink", "red", "blue", "darkgreen", "cyan", "gold", fungi.colors)) +
+  scale_fill_manual(values = c("#000000", "#E69F00", "#56B4E9", "#009E73", "#0072B2", "darkgreen", "#D55E00", "purple", "brown", fungi.colors)) +
   theme_classic() +
   xlab("")
-#labs(title = "Fungi SoilB") 
 indicatorB
+
 ```
 
 use this function to place both Soils A and B plots together
